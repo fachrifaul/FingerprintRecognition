@@ -181,8 +181,10 @@ public class CameraActivity extends Activity implements OnTouchListener, CvCamer
 
         super.onResume();
 
-        // re-load openCV
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, mLoaderCallback);
+        //re-load openCV - openCV integration WITH openCV manager
+        //OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9, this, mLoaderCallback);
+
+        // check openCV integration WITHOUT openCV manager
         Log.d("verify",String.valueOf(OpenCVLoader.initDebug()));
 
         // this is to over-come the problem of SIFT does not exist in default openCV
@@ -194,6 +196,9 @@ public class CameraActivity extends Activity implements OnTouchListener, CvCamer
         } catch (UnsatisfiedLinkError e) {
             Log.e(TAG, "Couldn't load this libs");
         }
+
+        cameraView.enableView();
+        cameraView.setOnTouchListener(CameraActivity.this);
 
         // update counter
         int count = processedImageCount();

@@ -1,31 +1,40 @@
 package com.fachri.finger;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.fachri.finger.app.ImageSaver;
+
 import org.opencv.android.Utils;
-import org.opencv.core.*;
+import org.opencv.core.Core;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfDouble;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
-import java.security.SecureClassLoader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Process the image to extract skeleton from it.
@@ -260,8 +269,30 @@ public class ProcessActivity extends Activity {
             }
         });
 
+        Button processButtonSaveStorage = findViewById(R.id.processButtonSaveStorage);
+        processButtonSaveStorage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveBitmapToImageStorage(matEnhanced);
+            }
+        });
+
         // start processing the image
         processImage();
+    }
+
+    private void saveBitmapToImageStorage(Mat image) {
+        int rows = image.rows();
+        int cols = image.cols();
+
+        Mat result = new Mat(rows, cols, CvType.CV_8UC1);
+        Core.normalize(image, result, 0, 255, Core.NORM_MINMAX, CvType.CV_8UC1);
+        Bitmap bitmap = matToBitmap(result);
+
+        new ImageSaver(this)
+                .setFileName("finger1.png")
+                .setDirectoryName("Finger")
+                .save(bitmap);
     }
 
     /**

@@ -71,19 +71,14 @@ public class ResultActivity extends Activity {
 
         setContentView(R.layout.result);
 
-        // set Home button of the ActionBar as back
-//        ActionBar actionBar = this.getActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
         // get views
         ListView listView = (ListView) findViewById(R.id.resultListView);
 
         String[] listValues = new String[Scores.size() + 1];
         Object[] names = Scores.keySet().toArray();
         listValues[0] = String.format("%-38s%s", "Name", "Score");
-        for (int i =0; i< Scores.size(); i++){
-            listValues[i+1] = String.format("%-40s%d", names[i].toString(), Scores.get(names[i]));
+        for (int i = 0; i < Scores.size(); i++) {
+            listValues[i + 1] = String.format("%-40s%d", names[i].toString(), Scores.get(names[i]));
         }
 
         // show the results

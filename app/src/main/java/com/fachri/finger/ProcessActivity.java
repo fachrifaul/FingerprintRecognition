@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +61,7 @@ public class ProcessActivity extends Activity {
     // region Private Variables
 
     private ImageView imageViewSource;
+    private ProgressBar progressBar;
 
     private Mat matRidgeOrientation;
     private Mat matRidgeFilter;
@@ -209,14 +213,19 @@ public class ProcessActivity extends Activity {
 
         setContentView(R.layout.process);
 
-        // set Home button of the ActionBar as back
-//        ActionBar actionBar = this.getActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
         // convert to bitmap and show
         imageViewSource = (ImageView) this.findViewById(R.id.processImageViewSource);
-        imageViewSource.setImageBitmap(matToBitmap(MatSnapShot));
+        Bitmap scaledBitmap = matToBitmap(MatSnapShot);
+
+        // Rotate bitmap
+        Matrix matrix = new Matrix();
+        matrix.postRotate(90);
+        Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0, scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix, true);
+
+        imageViewSource.setImageBitmap(scaledBitmap);
+
+        // progressBar
+        progressBar = findViewById(R.id.progressBar);
 
         // event handlers
         Button buttonSave = (Button) findViewById(R.id.processButtonSave);
@@ -278,7 +287,16 @@ public class ProcessActivity extends Activity {
         });
 
         // start processing the image
-        processImage();
+//        processImage();
+
+        progressBar.setVisibility(View.VISIBLE);
+        imageViewSource.setVisibility(View.GONE);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                processImage();
+            }
+        });
     }
 
     private void saveBitmapToImageStorage(Mat image) {
@@ -368,7 +386,15 @@ public class ProcessActivity extends Activity {
         matResult = matEnhanced.clone();
 
         // finally, show the processed image
-        showImage(matEnhanced);
+        //showImage(matEnhanced);
+
+        runOnUiThread(new Runnable() {
+            public void run() {
+                progressBar.setVisibility(View.GONE);
+                imageViewSource.setVisibility(View.VISIBLE);
+                showImage(matEnhanced);
+            }
+        });
     }
 
     /**

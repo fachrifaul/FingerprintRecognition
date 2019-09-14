@@ -151,11 +151,6 @@ public class MatchActivity extends Activity {
 
         setContentView(R.layout.match);
 
-        // set Home button of the ActionBar as back
-//        ActionBar actionBar = this.getActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
         MatchingThreshold = 45;
         showIndex = 0;
         matchResults = new ArrayList<Bitmap>();

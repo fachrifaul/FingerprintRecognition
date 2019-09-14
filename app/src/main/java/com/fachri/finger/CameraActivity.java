@@ -323,11 +323,6 @@ public class CameraActivity extends Activity implements OnTouchListener, CvCamer
         // disable screen sleep
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        // set Home button of the ActionBar as back
-//        ActionBar actionBar = this.getActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
         maskWidth = 260;
         maskHeight = 160;
 

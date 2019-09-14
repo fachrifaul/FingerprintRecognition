@@ -87,11 +87,6 @@ public class SettingsActivity extends Activity {
 
         setContentView(R.layout.settings);
 
-        // set Home button of the ActionBar as back
-//        ActionBar actionBar = this.getActionBar();
-//        actionBar.setHomeButtonEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-
         // get views
         editTextMatching = (EditText) findViewById(R.id.settingsEditTextMatching);
 
